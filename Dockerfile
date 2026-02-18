@@ -1,4 +1,4 @@
-FROM postgres:15-alpine
+FROM postgres:15.6-alpine
 
 ENV POSTGRES_DB=ecommerce
 ENV POSTGRES_USER=admin
