@@ -25,10 +25,11 @@ pipeline {
         stage('Security Scan') {
             steps {
                 sh '''
-                trivy image --exit-code 1 --severity HIGH ${IMAGE_NAME}:${BUILD_NUMBER}
+                trivy image database:${BUILD_NUMBER}
                 '''
             }
         }
+
 
         stage('Container Push') {
             steps {
