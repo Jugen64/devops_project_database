@@ -17,7 +17,7 @@ pipeline {
         stage('Container Build') {
             steps {
                 sh '''
-                docker build -t database:${BUILD_NUMBER} .
+                docker build -t ${IMAGE_NAME}:${BUILD_NUMBER} .
                 '''
             }
         }
@@ -25,7 +25,7 @@ pipeline {
         stage('Security Scan') {
             steps {
                 sh '''
-                trivy image --exit-code 1 --severity CRITICAL database:${BUILD_NUMBER}
+                trivy image --exit-code 1 --severity HIGH ${IMAGE_NAME}:${BUILD_NUMBER}
                 '''
             }
         }
