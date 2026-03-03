@@ -29,14 +29,14 @@ pipeline {
         }
 
         stage('Security Scan') {
-            agent {
-                docker {
-                    image 'aquasec/trivy:latest'
-                    args '-v /var/run/docker.sock:/var/run/docker.sock'
-                }
-            }
             steps {
-                sh 'trivy image database:${BUILD_NUMBER}'
+                sh '''
+                docker pull aquasec/trivy:latest
+
+                docker run --rm \
+                    -v /var/run/docker.sock:/var/run/docker.sock \
+                    aquasec/trivy:latest image database:${BUILD_NUMBER}
+                '''
             }
         }
 
