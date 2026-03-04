@@ -7,11 +7,7 @@ pipeline {
     }
 
     stages {
-        stage('Clean Workspace') {
-            steps {
-                deleteDir()
-            }
-        }
+
 
         stage('Sanity') {
             steps {
@@ -21,6 +17,7 @@ pipeline {
 
         stage('Checkout') {
             steps {
+                deleteDir()
                 checkout scm
             }
         }
