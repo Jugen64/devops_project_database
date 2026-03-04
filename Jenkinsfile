@@ -13,6 +13,7 @@ pipeline {
     stage('Sanity') {
       steps {
         sh 'which docker || true; docker --version || true; ls -la /var/run/docker.sock || true'
+        sh 'echo BRANCH_NAME=$BRANCH_NAME; echo CHANGE_ID=$CHANGE_ID'
       }
     }
 
