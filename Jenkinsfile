@@ -23,7 +23,7 @@ pipeline {
         stage('Container Build') {
             steps {
                 sh '''
-                docker build -t ${IMAGE_NAME}:${BUILD_NUMBER} .
+                docker build -t ${IMAGE_NAME}:$IMAGE_TAG .
                 '''
             }
         }
@@ -36,7 +36,7 @@ pipeline {
                 }
             }
             steps {
-                sh 'trivy image $IMAGE_NAME:${BUILD_NUMBER}'
+                sh 'trivy image $IMAGE_NAME:$IMAGE_TAG'
             }
         }
 
@@ -50,8 +50,8 @@ pipeline {
                 )]) {
                     sh '''
                     echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
-                    docker tag $IMAGE_NAME:${BUILD_NUMBER} $DOCKER_USER/$IMAGE_NAME:${BUILD_NUMBER}
-                    docker push $DOCKER_USER/$IMAGE_NAME:${BUILD_NUMBER}
+                    docker tag $IMAGE_NAME:$IMAGE_TAG $DOCKER_USER/$IMAGE_NAME:$IMAGE_TAG
+                    docker push $DOCKER_USER/$IMAGE_NAME:$IMAGE_TAG
                     '''
                 }
             }
