@@ -1,6 +1,8 @@
 pipeline {
   agent any
 
+  options { skipDefaultCheckout(true) }
+
   environment {
     IMAGE_NAME = "database"
     IMAGE_TAG  = "${BUILD_NUMBER}"
