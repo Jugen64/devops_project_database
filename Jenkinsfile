@@ -37,7 +37,7 @@ pipeline {
                     aquasec/trivy:latest image ${IMAGE_NAME}:${IMAGE_TAG}
                 '''
             }
-            }
+        }
 
 
         stage('Container Push') {
