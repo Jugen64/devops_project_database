@@ -55,28 +55,5 @@ pipeline {
                 }
             }
         }
-        
-        stage('Deploy Dev') {
-            when {
-                branch 'develop'
-            }
-            steps {
-                withCredentials([usernamePassword(
-                    credentialsId: 'dockerhub-creds',
-                    usernameVariable: 'DOCKER_USER',
-                    passwordVariable: 'DOCKER_PASS'
-                )]) {
-                    sh '''
-                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-
-                        export DOCKER_USER="$DOCKER_USER"
-                        export IMAGE_TAG="${IMAGE_TAG}"
-
-                        docker compose pull
-                        docker compose up -d
-                    '''
-                }
-            }
-        }
     }
 }
