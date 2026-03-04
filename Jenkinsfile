@@ -13,6 +13,7 @@ pipeline {
     stage('Sanity') {
       steps {
         sh 'which docker || true; docker --version || true; ls -la /var/run/docker.sock || true'
+        sh 'echo BRANCH_NAME=$BRANCH_NAME; echo CHANGE_ID=$CHANGE_ID'
       }
     }
 
@@ -23,7 +24,6 @@ pipeline {
       }
     }
 
-    // --- BUILD (all branches + PRs) ---
     stage('Container Build') {
       steps {
         sh 'docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .'
@@ -41,7 +41,6 @@ pipeline {
       }
     }
 
-    // --- DEV: develop branch (auto) ---
     stage('Push (Dev)') {
       when {
         allOf {
@@ -64,7 +63,6 @@ pipeline {
       }
     }
 
-    // --- STAGING: release/* branches (auto) ---
     stage('Push (Staging)') {
       when {
         allOf {
@@ -87,7 +85,6 @@ pipeline {
       }
     }
 
-    // --- PROD: main branch (manual approval) ---
     stage('Approve Prod') {
       when {
         allOf {
@@ -127,7 +124,6 @@ pipeline {
 
   post {
     always {
-      // optional cleanup so your Jenkins box doesn't fill up
       sh 'docker image prune -f || true'
     }
   }
