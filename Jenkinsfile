@@ -36,7 +36,7 @@ pipeline {
                 }
             }
             steps {
-                sh 'trivy image database:${BUILD_NUMBER}'
+                sh 'trivy image $IMAGE_NAME:${BUILD_NUMBER}'
             }
         }
 
@@ -50,8 +50,8 @@ pipeline {
                 )]) {
                     sh '''
                     echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
-                    docker tag database:${BUILD_NUMBER} $DOCKER_USER/database:${BUILD_NUMBER}
-                    docker push $DOCKER_USER/database:${BUILD_NUMBER}
+                    docker tag $IMAGE_NAME:${BUILD_NUMBER} $DOCKER_USER/$IMAGE_NAME:${BUILD_NUMBER}
+                    docker push $DOCKER_USER/$IMAGE_NAME:${BUILD_NUMBER}
                     '''
                 }
             }
