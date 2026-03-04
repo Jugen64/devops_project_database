@@ -39,8 +39,30 @@ pipeline {
             }
         }
 
-
         stage('Container Push') {
+        steps {
+            withCredentials([usernamePassword(
+            credentialsId: 'dockerhub-creds',
+            usernameVariable: 'DOCKER_USER',
+            passwordVariable: 'DOCKER_PASS'
+            )]) {
+            sh '''
+                echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+
+                docker tag ${IMAGE_NAME}:${IMAGE_TAG} $DOCKER_USER/${IMAGE_NAME}:${IMAGE_TAG}
+                docker push $DOCKER_USER/${IMAGE_NAME}:${IMAGE_TAG}
+
+                docker tag ${IMAGE_NAME}:${IMAGE_TAG} $DOCKER_USER/${IMAGE_NAME}:latest
+                docker push $DOCKER_USER/${IMAGE_NAME}:latest
+            '''
+            }
+        }
+        }
+
+        stage('Deploy Dev') {
+            when {
+                branch 'develop'
+            }
             steps {
                 withCredentials([usernamePassword(
                     credentialsId: 'dockerhub-creds',
@@ -48,9 +70,13 @@ pipeline {
                     passwordVariable: 'DOCKER_PASS'
                 )]) {
                     sh '''
-                    echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
-                    docker tag ${IMAGE_NAME}:${IMAGE_TAG} $DOCKER_USER/${IMAGE_NAME}:latest
-                    docker push $DOCKER_USER/${IMAGE_NAME}:latest
+                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+
+                        export DOCKER_USER="$DOCKER_USER"
+                        export IMAGE_TAG="${IMAGE_TAG}"
+
+                        docker compose pull
+                        docker compose up -d
                     '''
                 }
             }
