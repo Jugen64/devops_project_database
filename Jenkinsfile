@@ -23,7 +23,7 @@ pipeline {
         stage('Container Build') {
             steps {
                 sh '''
-                docker build -t ${IMAGE_NAME}:$IMAGE_TAG .
+                docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .
                 '''
             }
         }
@@ -34,7 +34,7 @@ pipeline {
                 docker pull aquasec/trivy:latest
                 docker run --rm \
                     -v /var/run/docker.sock:/var/run/docker.sock \
-                    aquasec/trivy:latest image "$IMAGE"
+                    aquasec/trivy:latest image ${IMAGE_NAME}:${IMAGE_TAG}
                 '''
             }
             }
@@ -49,8 +49,8 @@ pipeline {
                 )]) {
                     sh '''
                     echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
-                    docker tag $IMAGE_NAME:$IMAGE_TAG $DOCKER_USER/$IMAGE_NAME:$IMAGE_TAG
-                    docker push $DOCKER_USER/$IMAGE_NAME:$IMAGE_TAG
+                    docker tag ${IMAGE_NAME}:${IMAGE_TAG} $DOCKER_USER/${IMAGE_NAME}:${IMAGE_TAG}:latest
+                    docker push $DOCKER_USER/${IMAGE_NAME}:${IMAGE_TAG}:latest
                     '''
                 }
             }
