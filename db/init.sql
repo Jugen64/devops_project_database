@@ -24,4 +24,5 @@ INSERT INTO products (name, price, description) VALUES
                                                     ('Mouse', 29.99, 'Wireless mouse'),
                                                     ('Keyboard', 79.99, 'Mechanical keyboard'),
                                                     ('Monitor', 299.99, '27-inch LED monitor'),
-                                                    ('Headphones', 149.99, 'Noise-cancelling headphones');
+                                                    ('Headphones', 149.99, 'Noise-cancelling headphones'),
+                                                    ('NewItem', 99999.99, 'New item to show that I can change things.');
